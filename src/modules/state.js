@@ -119,3 +119,11 @@ export function setSortMode(state, sortMode) {
   return { ...state, sortMode };
 }
 
+export function toggleExpandedTodo(state, todoId) {
+  return {
+    ...state,
+    expandedTodoId: state.expandedTodoId === todoId ? null : todoId,
+    editingTodoId: null, // avoid “expanded + editing” weirdness
+  };
+}
+

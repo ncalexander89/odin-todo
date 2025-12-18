@@ -1,7 +1,7 @@
 import "./style.css";
 import { render } from "./modules/ui.js";
 import { makeSampleState } from "./modules/sampleData.js";
-import { loadState, saveState } from "./modules/storage.js";
+import { loadState, saveState, clearState, migrateState } from "./modules/storage.js";
 import {
   selectProject,
   toggleTodo,
@@ -16,11 +16,14 @@ import {
   setView,
   setHideCompleted,
   setSortMode,
+  toggleExpandedTodo
 } from "./modules/state.js";
 
 const appRoot = document.querySelector("#app");
 
-let state = loadState() ?? makeSampleState();
+let state = migrateState(loadState()) ?? makeSampleState();
+state = migrateState(state);
+saveState(state);
 
 // migration defaults (prevents blank screen when you add new state fields)
 state = {
@@ -93,10 +96,17 @@ onAddProject(name) {
 },
 
 onDeleteProject(projectId) {
+  const project = state.projects.find((p) => p.id === projectId);
+  const name = project?.name ?? "this project";
+
+  const ok = window.confirm(`Delete "${name}"?\n\nIts todos will be moved to Inbox.`);
+  if (!ok) return;
+
   state = deleteProject(state, projectId);
   saveState(state);
   render(appRoot, state, handlers);
 },
+
 
 onStartProjectRename(projectId) {
   state = setEditingProject(state, projectId);
@@ -135,6 +145,17 @@ onSetSortMode(sortMode) {
   render(appRoot, state, handlers);
 },
 
+onResetApp() {
+  clearState();
+  state = migrateState(makeSampleState());
+  saveState(state);
+  render(appRoot, state, handlers);
+},
+onToggleExpandedTodo(todoId) {
+  state = toggleExpandedTodo(state, todoId);
+  saveState(state);
+  render(appRoot, state, handlers);
+},
 
 
 };

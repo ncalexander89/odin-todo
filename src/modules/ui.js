@@ -144,6 +144,10 @@ else if (state.view === "week") visibleTodos = state.todos.filter((t) => isDueTh
 
 let list = visibleTodos;
 
+const totalTodos = state.todos.length;
+const shownTodos = list.length;
+
+
 if (state.hideCompleted) {
   list = list.filter((t) => !t.completed);
 }
@@ -179,7 +183,15 @@ if (state.sortMode === "priority") {
 const main = el(
   "main",
   { className: "main" },
+  el(
+  "button",
+  { type: "button", className: "danger", onClick: () => handlers.onResetApp() },
+  "Reset data"
+),
+
   el("h1", {}, selectedProject ? selectedProject.name : "Todos"),
+  el("p", { className: "summary" }, `${shownTodos} shown • ${totalTodos} total`),
+
 
   el(
     "div",
@@ -326,18 +338,23 @@ const main = el(
 
               return el(
                 "li",
-                { className: t.completed ? "todo done" : "todo" },
+                { className: t.completed ? "todo done" : "todo",
+                        onClick: () => handlers.onToggleExpandedTodo(t.id),
+
+                 },
                 el(
                   "div",
                   { className: "todo-top" },
                   el(
                     "label",
                     {},
-                    el("input", {
-                      type: "checkbox",
-                      checked: t.completed,
-                      onChange: () => handlers.onToggleTodo(t.id),
-                    }),
+el("input", {
+  type: "checkbox",
+  checked: t.completed,
+  onClick: (e) => e.stopPropagation(),
+  onChange: () => handlers.onToggleTodo(t.id),
+}),
+
                     " ",
 el(
   "strong",
@@ -348,20 +365,32 @@ el(
     : null
 ),
                     " ",
-                    el(
-                      "span",
-                      { className: "meta" },
-                      `(${t.priority}${t.dueDate ? `, due ${t.dueDate}` : ""})`
-                    )
+el("span", { className: `pill ${t.priority}` }, t.priority),
+t.dueDate ? el("span", { className: "meta" }, ` due ${t.dueDate}`) : el("span", { className: "meta" }, " no due date")
+
                   ),
                   el(
                     "div",
                     { className: "actions" },
-                    el("button", { type: "button", onClick: () => handlers.onStartEditTodo(t.id) }, "Edit"),
-                    el("button", { type: "button", onClick: () => handlers.onDeleteTodo(t.id) }, "Delete")
-                  )
+                    el("button", {
+  type: "button",
+  onClick: (e) => { e.stopPropagation(); handlers.onStartEditTodo(t.id); },
+}, "Edit"),
+
+el("button", {
+  type: "button",
+  onClick: (e) => { e.stopPropagation(); handlers.onDeleteTodo(t.id); },
+}, "Delete")),
+
                 ),
-                t.description ? el("div", { className: "desc" }, t.description) : null
+state.expandedTodoId === t.id
+  ? el(
+      "div",
+      { className: "details" },
+      t.description ? el("div", { className: "desc" }, t.description) : el("div", { className: "desc muted" }, "No description."),
+      el("div", { className: "meta-line" }, `Due: ${t.dueDate || "—"} • Priority: ${t.priority} • Completed: ${t.completed ? "yes" : "no"}`)
+    )
+  : null
               );
             })
           )

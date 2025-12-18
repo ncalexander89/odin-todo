@@ -80,3 +80,37 @@ body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; marg
 }
 .badge { font-weight: 500; color: var(--muted); }
 
+.danger {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: white;
+  cursor: pointer;
+  font: inherit;
+}
+.danger:hover { background: #fff1f1; }
+
+.summary { color: var(--muted); margin: 8px 0 10px; }
+
+.todo { cursor: pointer; }
+.todo .actions button { cursor: pointer; }
+
+.details { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+.muted { color: var(--muted); }
+.meta-line { color: var(--muted); font-size: 0.9em; margin-top: 6px; }
+
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 0.85em;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.pill.high { background: #ffe8e8; }
+.pill.medium { background: #fff6dd; }
+.pill.low { background: #eaffea; }
+
+

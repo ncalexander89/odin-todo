@@ -41,7 +41,7 @@ module.exports = (env, argv) => {
       filename: "main.js",
       path: path.resolve(__dirname, "dist"),
       clean: true,
-      publicPath: isProd ? "https://github.com/ncalexander89/odin-todo" : "auto",
+      publicPath: isProd ? "/odin-todo/" : "auto",
     },
     devServer: {
       static: "./dist",
@@ -49,10 +49,18 @@ module.exports = (env, argv) => {
       port: 8080,
     },
     module: {
-      rules: [{ test: /\.css$/i, use: ["style-loader", "css-loader"] }],
+      rules: [
+        {
+          test: /\.css$/i,
+          use: ["style-loader", "css-loader"],
+        },
+      ],
     },
     plugins: [
-      new HtmlWebpackPlugin({ template: "./src/template.html" }),
+      new HtmlWebpackPlugin({
+        template: "./src/template.html",
+      }),
     ],
   };
 };
+
