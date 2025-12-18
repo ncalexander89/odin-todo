@@ -41,7 +41,7 @@ module.exports = (env, argv) => {
       filename: "main.js",
       path: path.resolve(__dirname, "dist"),
       clean: true,
-      publicPath: isProd ? "/REPO_NAME/" : "auto",
+      publicPath: isProd ? "https://github.com/ncalexander89/odin-todo" : "auto",
     },
     devServer: {
       static: "./dist",
